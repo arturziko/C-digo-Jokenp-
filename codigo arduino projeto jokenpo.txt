@@ -1,0 +1,92 @@
+const int btnPedra = 2;
+const int btnPapel = 3;
+const int btnTesoura = 4;
+
+const int ledJogPedra = 8;
+const int ledJogPapel = 9;
+const int ledJogTesoura = 10;
+
+const int ledCpuPedra = 11;
+const int ledCpuPapel = 12;
+const int ledCpuTesoura = 13;
+
+void setup() {
+
+  pinMode(btnPedra, INPUT_PULLUP);
+  pinMode(btnPapel, INPUT_PULLUP);
+  pinMode(btnTesoura, INPUT_PULLUP);
+
+  pinMode(ledJogPedra, OUTPUT);
+  pinMode(ledJogPapel, OUTPUT);
+  pinMode(ledJogTesoura, OUTPUT);
+
+  pinMode(ledCpuPedra, OUTPUT);
+  pinMode(ledCpuPapel, OUTPUT);
+  pinMode(ledCpuTesoura, OUTPUT);
+
+  Serial.begin(9600);
+  randomSeed(analogRead(A0));
+}
+
+void apagarLeds(){
+
+  digitalWrite(ledJogPedra,LOW);
+  digitalWrite(ledJogPapel,LOW);
+  digitalWrite(ledJogTesoura,LOW);
+
+  digitalWrite(ledCpuPedra,LOW);
+  digitalWrite(ledCpuPapel,LOW);
+  digitalWrite(ledCpuTesoura,LOW);
+}
+
+void mostrarJogador(int jogada){
+
+  if(jogada==0) digitalWrite(ledJogPedra,HIGH);
+  if(jogada==1) digitalWrite(ledJogPapel,HIGH);
+  if(jogada==2) digitalWrite(ledJogTesoura,HIGH);
+}
+
+void mostrarCpu(int jogada){
+
+  if(jogada==0) digitalWrite(ledCpuPedra,HIGH);
+  if(jogada==1) digitalWrite(ledCpuPapel,HIGH);
+  if(jogada==2) digitalWrite(ledCpuTesoura,HIGH);
+}
+
+void loop(){
+
+  int jogador = -1;
+
+  if(digitalRead(btnPedra)==LOW) jogador=0;
+  if(digitalRead(btnPapel)==LOW) jogador=1;
+  if(digitalRead(btnTesoura)==LOW) jogador=2;
+
+  if(jogador!=-1){
+
+    apagarLeds();
+
+    int cpu = random(0,3);
+
+    mostrarJogador(jogador);
+    mostrarCpu(cpu);
+
+    if(jogador==cpu){
+      Serial.println("Empate");
+    }
+
+    else if(
+      (jogador==0 && cpu==2) ||
+      (jogador==1 && cpu==0) ||
+      (jogador==2 && cpu==1)
+    ){
+      Serial.println("Voce venceu");
+    }
+
+    else{
+      Serial.println("Voce perdeu");
+    }
+
+    delay(3000);
+    apagarLeds();
+  }
+}
